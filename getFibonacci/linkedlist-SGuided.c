@@ -10,7 +10,7 @@
 #ifndef FS
 #define FS 38
 #endif
-#define NUM_THREADS 2
+
 
 // STRUCTS
 struct node {
@@ -26,7 +26,9 @@ void processwork(node* p);
 node* init_list(node* p);
 
 int main(int argc, char *argv[]) {
-   omp_set_num_threads(NUM_THREADS);
+   int num_threads = atoi(argv[1]);
+   omp_set_num_threads(num_threads);
+
    node *p=NULL; node *temp=NULL ;node *head=NULL;
    int counter = 0, numThreads = 0;
    double start, end;
@@ -44,7 +46,7 @@ int main(int argc, char *argv[]) {
    }
 
    #pragma omp parallel for schedule(dynamic, 1)
-   for (int i = 0; i < counter-1; i += NUM_THREADS){
+   for (int i = 0; i < counter-1; i++){
       processwork(node_arr[i]);
       // printf("%d : %d\n", node_arr[i]->data, node_arr[i]->fibdata); // Display Fibonacci Number
       free(node_arr[i]);

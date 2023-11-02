@@ -1,11 +1,11 @@
-// linkedlist-SStatic
+// linkedlist-Task
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
 
 // CONSTANTS
 #ifndef N 
-#define N 5
+#define N 4
 #endif
 #ifndef FS
 #define FS 38
@@ -27,7 +27,7 @@ node* init_list(node* p);
 int main(int argc, char *argv[]) {
    int num_threads = atoi(argv[1]);
    omp_set_num_threads(num_threads);
-
+   
    node *p=NULL; node *temp=NULL ;node *head=NULL;
    int counter = 0, numThreads = 0;
    double start, end;
@@ -38,25 +38,21 @@ int main(int argc, char *argv[]) {
 
    // Get Linked List size
    while (p != NULL) {p = p->next; counter++;}
-   node* node_arr[counter]; node* init = head; 
-   for (int i = 0; i < counter-1; i++){
-      node_arr[i] = init;
-      init = init->next;
+   node* node_arr[counter]; 
+   #pragma omp parallel
+   {  
+      #pragma omp single 
+      for (node* init = head; init; init = init->next){
+         #pragma omp task 
+           {processwork(init);} // printf("%d : %d\n", init->data, init->fibdata);} // Display Fibonacci Number
+      }
    }
-
-   #pragma omp parallel for schedule(static, 1)
-   for (int i = 0; i < counter-1; i++){
-      processwork(node_arr[i]);
-      // printf("%d : %d\n", node_arr[i]->data, node_arr[i]->fibdata); // Display Fibonacci Number
-      free(node_arr[i]);
-   }
-
    free(p);
    end = omp_get_wtime();
    printf("%f seconds\n", end - start);
    return 0;
 }
-
+   
 int fib(int n) {
    int x, y;
    if (n < 2) {
@@ -94,3 +90,4 @@ node* init_list(node* p) {
    
    return head;
 }
+

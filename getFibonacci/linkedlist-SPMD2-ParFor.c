@@ -1,4 +1,4 @@
-// linkedlist-SStatic
+// linkedlist-SPMD-ParFor
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
@@ -10,6 +10,7 @@
 #ifndef FS
 #define FS 38
 #endif
+
 
 // STRUCTS
 struct node {
@@ -44,19 +45,18 @@ int main(int argc, char *argv[]) {
       init = init->next;
    }
 
-   #pragma omp parallel for schedule(static, 1)
+   #pragma omp parallel for
    for (int i = 0; i < counter-1; i++){
       processwork(node_arr[i]);
       // printf("%d : %d\n", node_arr[i]->data, node_arr[i]->fibdata); // Display Fibonacci Number
       free(node_arr[i]);
    }
-
    free(p);
    end = omp_get_wtime();
    printf("%f seconds\n", end - start);
    return 0;
 }
-
+   
 int fib(int n) {
    int x, y;
    if (n < 2) {
@@ -94,3 +94,4 @@ node* init_list(node* p) {
    
    return head;
 }
+
