@@ -27,26 +27,26 @@ node* init_list(node* p);
 int main(int argc, char *argv[]) {
    int num_threads = atoi(argv[1]);
    omp_set_num_threads(num_threads);
-   
+
    node *p=NULL; node *temp=NULL ;node *head=NULL;
-   int counter = 0, numThreads = 0;
    double start, end;
    
    p = init_list(p);
-   head = p;
    start = omp_get_wtime();
 
    // Get Linked List size
-   while (p != NULL) {p = p->next; counter++;}
-   node* node_arr[counter]; 
-   #pragma omp parallel
-   {  
+   #pragma omp parallel firstprivate(p)
+   {
       #pragma omp single 
-      for (node* init = head; init; init = init->next){
-         #pragma omp task 
-           {processwork(init);} // printf("%d : %d\n", init->data, init->fibdata);} // Display Fibonacci Number
+      {
+         while (p != NULL) {
+            #pragma omp task 
+              {processwork(p);} // printf("%d : %d\n", p->data, p->fibdata);} // Display Fibonacci Number
+            p = p->next; 
+         }
       }
    }
+   
    free(p);
    end = omp_get_wtime();
    printf("%f\n", end - start);
@@ -90,4 +90,3 @@ node* init_list(node* p) {
    
    return head;
 }
-

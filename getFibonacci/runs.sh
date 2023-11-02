@@ -10,7 +10,7 @@ for i in {1..8}; do
         time=$(./"$filename" $i)
         if [ $j -eq 5 ]; then end=""
         else end=", "; fi
-        printf "$time$end" >> dataTest-$filename.csv
+        printf "$time$end" >> data-$filename.csv
     done
     printf "\n" >> data-$filename.csv
 done
