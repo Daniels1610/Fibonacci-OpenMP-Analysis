@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
       p = temp;
    }  
    free (p);
-   printf("Compute Time: %f seconds\n", end - start);
+   printf("%f\n", end - start);
    return 0;
 }
 

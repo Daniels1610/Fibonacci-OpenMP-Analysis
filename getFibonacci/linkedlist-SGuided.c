@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
    free(p);
    end = omp_get_wtime();
-   printf("%f seconds\n", end - start);
+   printf("%f\n", end - start);
    return 0;
 }
 
